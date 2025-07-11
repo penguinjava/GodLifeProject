@@ -59,3 +59,4 @@
 ```ts
 const isAuthenticated = computed(() => !!token.value)
 # GodLifeProject
+# GodLifeProject
