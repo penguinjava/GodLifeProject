@@ -1,0 +1,16 @@
+# IDE
+.idea/
+
+# Node
+nest-project/mode_modules/
+nest-project/dist/
+nest-project/build/
+vue-project/mode_modules/
+vue-project/dist/
+vue-project/build/
+
+# 환경변수
+nest-project/.env.*
+nest-project/.env
+vue-project/.env.*
+vue-project/.env
