@@ -2,10 +2,10 @@
 .idea/
 
 # Node
-nest-project/mode_modules/
+nest-project/node_modules/
 nest-project/dist/
 nest-project/build/
-vue-project/mode_modules/
+vue-project/node_modules/
 vue-project/dist/
 vue-project/build/
 
