@@ -1,3 +1,4 @@
+# 2025-07-12
 # 📝 Kakao OAuth 인증 + NestJS + Vue3 작업 정리
 
 ## 📦 기술 스택
