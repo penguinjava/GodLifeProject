@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 아이폰 더블클릭 확대 완전 차단 */
+* {
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* 텍스트는 선택 가능하게 */
+input, textarea, p, span, div[contenteditable] {
+  -webkit-user-select: text;
+}
+
+/* 아이폰 스크롤 바운스 효과 제거 */
+body {
+  margin: 0;
+  padding: 0;
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 아이폰 스크롤 개선 */
+* {
+  -webkit-overflow-scrolling: touch;
+}
