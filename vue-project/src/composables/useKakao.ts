@@ -1,4 +1,3 @@
-// src/composables/useKakao.ts
 import { ref } from 'vue'
 
 const isKakaoInitialized = ref(false)
@@ -37,13 +36,9 @@ export const useKakao = () => {
         }
     }
 
-    const isKakaoReallyInitialized = () => {
-        return !!window.Kakao && window.Kakao.isInitialized?.()
-    }
 
     return {
         initKakao,
         isKakaoInitialized,
-        isKakaoReallyInitialized,
     }
 }

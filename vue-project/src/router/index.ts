@@ -47,12 +47,13 @@ const router = createRouter({
 router.beforeEach(async (to) => {
     const authStore = useAuthStore()
 
-    // 토큰 복구
+
+
     if (!authStore.isAuthenticated && localStorage.getItem('accessToken')) {
         await authStore.restoreToken()
     }
 
-    // 인증이 필요한 페이지 접근인데 로그인 안 돼있음
+
     if (to.meta.requiresAuth && !authStore.isAuthenticated) {
         return { name: 'login' }
     }

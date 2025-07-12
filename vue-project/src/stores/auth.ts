@@ -1,21 +1,19 @@
-// src/stores/auth.ts
-
-import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import {defineStore} from 'pinia'
+import {ref, computed} from 'vue'
 import axiosInstance from "@/api/axios";
-import type { User } from "@/types/user";
+import type {User} from "@/types/user";
 
 export const useAuthStore = defineStore('auth', () => {
     const user = ref<User | null>(null)
     const token = ref<string | null>(null)
-    // const refreshToken = ref<string | null>(null)
     const isLoading = ref(false)
     const isAuthenticated = computed(() => !!token.value)
+
 
     /**
      * 카카오 로그인
      */
-    const kakaoLogin = async () => {
+    const kakaoLogin = () => {
         try {
             if (!window.Kakao?.Auth) new Error('카카오 SDK가 초기화되지 않았습니다.')
 
@@ -37,11 +35,14 @@ export const useAuthStore = defineStore('auth', () => {
         if (saved) {
             token.value = saved
             try {
+                console.log('실행됨')
                 await fetchUserInfo()
             } catch (err) {
                 console.warn('토큰이 만료되었거나 유효하지 않음. 로그아웃 처리함')
                 logout()
             }
+        }else{
+            logout()
         }
     }
 
@@ -60,6 +61,7 @@ export const useAuthStore = defineStore('auth', () => {
             user.value = response.data
         } catch (error) {
             console.error('사용자 정보 불러오기 실패:', error)
+            logout()
         } finally {
             isLoading.value = false
         }
@@ -79,10 +81,11 @@ export const useAuthStore = defineStore('auth', () => {
     /**
      * 로그아웃
      */
-    const logout = () => {
+    const logout = async () => {
         user.value = null
         token.value = null
         localStorage.removeItem('accessToken')
+        await axiosInstance.get('/auth/logout');
     }
 
     return {

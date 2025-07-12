@@ -7,7 +7,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup type="ts">
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { onMounted } from 'vue'
@@ -16,19 +16,20 @@ const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
 
-onMounted(() => {
+onMounted( async () => {
   const token = route.query.token
 
   if (token) {
     console.log('저장완료')
     authStore.setToken(token)
+    await authStore.restoreToken()
 
     setTimeout(() => {
       router.push('/')
     }, 500)
   } else {
     console.log('로그인 실패, /login 이동')
-    router.push('/login')
+    await router.push('/login')
   }
 })
 </script>
