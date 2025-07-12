@@ -11,7 +11,7 @@ export class AuthService {
         private readonly UsersService: UsersService
     ) {}
 
-    async kakaoLogin(code: string): Promise<string> {
+    async kakaoLogin(code: string): Promise<{accessToken: string, refreshToken: string}> {
         try{
             const kakaoTokenRes = await axios.post(
                 'https://kauth.kakao.com/oauth/token',
@@ -52,7 +52,7 @@ export class AuthService {
                 new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
             );
 
-            return JSON.stringify({ accessToken})
+            return { accessToken, refreshToken }
         } catch(err){
             console.error('카카오 로그인 실패:', err)
             throw new Error('카카오 로그인 중 오류 발생')

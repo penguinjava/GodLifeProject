@@ -8,6 +8,7 @@ import type { User } from "@/types/user";
 export const useAuthStore = defineStore('auth', () => {
     const user = ref<User | null>(null)
     const token = ref<string | null>(null)
+    // const refreshToken = ref<string | null>(null)
     const isLoading = ref(false)
     const isAuthenticated = computed(() => !!token.value)
 
