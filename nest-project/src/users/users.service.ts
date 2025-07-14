@@ -14,6 +14,12 @@ export class UsersService {
     ) {
     }
 
+    /**
+     * 회원유무 확인
+     * @param kakao_id
+     * @param nickname
+     * @param profile_image
+     */
     async findOrCreate(kakao_id: string, nickname: string, profile_image: string): Promise<Users> {
         let user = await this.usersRepository.findOne({where: {kakao_id}})
 
@@ -25,7 +31,13 @@ export class UsersService {
         return user
     }
 
-
+    /**
+     * 세션유지용으로 저장
+     * @param userId
+     * @param uuid
+     * @param refreshToken
+     * @param expiresAt
+     */
     async saveSessionToken(
         userId: string,
         uuid: string,
@@ -41,4 +53,13 @@ export class UsersService {
 
         return await this.tokensRepository.save(token);
     }
+
+    /**
+     * 회원정보 불러오기
+     * @param kakao_id
+     */
+    async findById(kakao_id: string): Promise<Users | null> {
+        return await this.usersRepository.findOne({ where: { kakao_id } });
+    }
+
 }

@@ -1,7 +1,10 @@
-import { Controller, Get, Query, Redirect, UseGuards, Req, HttpCode, Res} from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { Controller, Redirect, UseGuards, HttpCode} from '@nestjs/common';
+import { Post, Get, Res, Req, Query } from '@nestjs/common';
+import { AuthService } from '@/auth/auth.service';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiResponse } from '@/common/dto/api-response.dto'
 import { Response } from 'express';
+
 
 @Controller('auth')
 export class AuthController {
@@ -29,9 +32,51 @@ export class AuthController {
     @HttpCode(200)
     @UseGuards(AuthGuard('jwt'))
     @Get('me')
-    async getProfile(@Req() req: { user: string}){
-        const user = req.user;
-        console.log(user);
-        return user;
+    async getProfile(@Req() req: { user: string}): Promise<ApiResponse<string>>{
+        try{
+            const { user } = req
+            return {
+                success: true,
+                statusCode: 200,
+                message: 'Authentication successful',
+                data: user
+            };
+        }catch(err){
+            return{
+                success: false,
+                statusCode: 500,
+                message: 'Authentication failed',
+                error: err?.message || 'Authentication failed',
+            }
+        }
+
+    }
+
+
+    @HttpCode(200)
+    @UseGuards(AuthGuard('jwt'))
+    @Post('logout')
+    logout(@Res({ passthrough: true }) res: Response): ApiResponse<null>{
+        try{
+            res.clearCookie('refreshToken',{
+                httpOnly: true,
+                secure: true,
+                sameSite: 'strict',
+            });
+
+            return {
+                success: true,
+                statusCode: 200,
+                message: 'Logged out successfully'
+            }
+        }catch(err){
+            return{
+                success: false,
+                statusCode: 500,
+                message: 'Logout failed',
+                error: err?.message || 'Logout failed',
+            }
+        }
+
     }
 }

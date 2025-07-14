@@ -20,7 +20,6 @@ onMounted( async () => {
   const token = route.query.token
 
   if (token) {
-    console.log('저장완료')
     authStore.setToken(token)
     await authStore.restoreToken()
 
