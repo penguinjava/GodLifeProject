@@ -17,8 +17,8 @@
 
 ## 📋 Commit Log
 
-| 버전    | 날짜         | 커밋 메시지                                                    |
-|-------|------------|-----------------------------------------------------------|
+| 버전    | 날짜         | 커밋 메시지                                                                      |
+|-------|------------|-----------------------------------------------------------------------------|
 | 0.3.1 | 2025/07/15 | - `[feat] Implement token authentication excluding refresh token in logout` |
-| 0.2.1 |            | - `[fix] Prevent login persistence with an invalid token` |
-|       | 2025/07/12 | - `[docs] Update README`                                  |
+| 0.2.1 |            | - `[fix] Prevent login persistence with an invalid token`                   |
+|       | 2025/07/12 | - `[docs] Update README`                                                    |
