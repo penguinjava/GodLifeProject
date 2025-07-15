@@ -69,9 +69,8 @@ const isLoading = computed(() => authStore.isLoading)
 
 onMounted(async () => {
   await initKakao()
-  await authStore.restoreToken()
 
-  if (authStore.isAuthenticated) {
+  if (!authStore.isAuthenticated) {
     await router.push('/')
   }
 })

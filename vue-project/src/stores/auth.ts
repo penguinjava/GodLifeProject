@@ -33,7 +33,6 @@ export const useAuthStore = defineStore('auth', () => {
         if (saved) {
             token.value = saved
             try {
-                console.log('실행됨')
                 await fetchUserInfo()
             } catch (err) {
                 console.warn('토큰이 만료되었거나 유효하지 않음. 로그아웃 처리함')
@@ -79,7 +78,7 @@ export const useAuthStore = defineStore('auth', () => {
 
         if(res.data.success){
             localStorage.removeItem('accessToken')
-            console.log(res.data.message)
+            location.reload()
         }else{
             console.error(res.data.message)
         }

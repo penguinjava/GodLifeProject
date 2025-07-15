@@ -24,9 +24,8 @@ export const useKakao = () => {
 
             if (!window.Kakao.isInitialized()) {
                 window.Kakao.init(import.meta.env.VITE_KAKAO_JS_KEY)
-                console.log('✅ Kakao SDK 초기화 완료')
             } else {
-                console.log('ℹ️ Kakao SDK는 이미 초기화됨')
+                console.error('ℹ️ Kakao SDK는 이미 초기화됨')
             }
 
             isKakaoInitialized.value = true

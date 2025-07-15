@@ -29,17 +29,15 @@ export class AuthController {
     }
 
 
-    @HttpCode(200)
+    @HttpCode(204)
     @UseGuards(AuthGuard('jwt'))
     @Get('me')
     async getProfile(@Req() req: { user: string}): Promise<ApiResponse<string>>{
         try{
-            const { user } = req
             return {
                 success: true,
-                statusCode: 200,
+                statusCode: 204,
                 message: 'Authentication successful',
-                data: user
             };
         }catch(err){
             return{
@@ -49,7 +47,6 @@ export class AuthController {
                 error: err?.message || 'Authentication failed',
             }
         }
-
     }
 
 
