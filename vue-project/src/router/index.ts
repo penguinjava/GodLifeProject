@@ -46,10 +46,11 @@ const router = createRouter({
 
 router.beforeEach(async (to) => {
     const authStore = useAuthStore()
-
-    if (!authStore.isAuthenticated && localStorage.getItem('accessToken')) {
+console.log('debug1')
+    if (!authStore.isAuthenticated) {
         await authStore.restoreToken()
     }
+    console.log('debug2')
 
 
     if (to.meta.requiresAuth && !authStore.isAuthenticated) {

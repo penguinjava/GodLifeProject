@@ -68,4 +68,14 @@ export class AuthService {
             profileImg: decoded.profileImg
         }
     }
+
+
+    /**
+     * refreshToken 조회
+     */
+    async getRefreshToken(refreshToken: string) {
+        const { id: token_id } = this.jwtService.verify(refreshToken)
+        const [{ user_id }] = await this.UsersService.findUserid(token_id);
+        return this.jwtService.sign({id: user_id}, {expiresIn: '1h'});
+    }
 }

@@ -2,6 +2,7 @@ import {defineStore} from 'pinia'
 import {ref, computed} from 'vue'
 import axiosInstance from "@/api/axios";
 import type {User} from "@/types/user";
+import axios, { AxiosError } from 'axios';
 
 export const useAuthStore = defineStore('auth', () => {
     const user = ref<User | null>(null)
@@ -30,10 +31,13 @@ export const useAuthStore = defineStore('auth', () => {
      */
     const restoreToken = async () => {
         const saved = localStorage.getItem('accessToken')
+        console.log('debug : restoreToken')
         if (saved) {
             token.value = saved
             try {
+                console.log('debut : fetchUserInfo before')
                 await fetchUserInfo()
+                console.log('debut : fetchUserInfo after')
             } catch (err) {
                 console.warn('토큰이 만료되었거나 유효하지 않음. 로그아웃 처리함')
                 await logout()
@@ -48,16 +52,42 @@ export const useAuthStore = defineStore('auth', () => {
      */
     const fetchUserInfo = async () => {
         try {
-            isLoading.value = true
-            const res = await axiosInstance.get('/auth/me')
-            user.value = res.data.data
-        } catch (error) {
-            console.error('토큰 인증 실패:', error)
-            await logout()
+            console.log('debut : fetchUserInfo')
+            isLoading.value = true;
+            console.log('debut : api/auth/me before')
+            await axiosInstance.get('/auth/me');
+            console.log('debut : api/auth/me after')
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                const axiosError = error as AxiosError;
+                const status = axiosError.response?.status;
+
+                if (status === 401) {
+                    try {
+                        console.log('debug : api/auth/refresh before')
+                        const result = await axiosInstance.post('/auth/refresh');
+                        console.error(result.data);
+                        localStorage.setItem('accessToken', result.data.data);
+
+                        console.log('debug : api/auth/refresh after')
+                        await axiosInstance.get('/auth/me');
+                    } catch (refreshError) {
+                        console.error('리프레시 실패', refreshError);
+                        await logout();
+                    }
+                } else {
+                    console.error('토큰 인증 실패:', error);
+                    await logout();
+                }
+            } else {
+                console.error('알 수 없는 에러', error);
+                await logout();
+            }
         } finally {
-            isLoading.value = false
+            isLoading.value = false;
         }
-    }
+    };
+
 
     /**
      * 새로운 토큰 발급

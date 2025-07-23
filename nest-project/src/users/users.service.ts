@@ -54,6 +54,10 @@ export class UsersService {
         return await this.tokensRepository.save(token);
     }
 
+    async findUserid(token_id: string): Promise<Tokens[]> {
+        return await this.tokensRepository.find({where: {token_id}})
+    }
+
     /**
      * 회원정보 불러오기
      * @param kakao_id

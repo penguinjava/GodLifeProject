@@ -60,6 +60,7 @@ import {useRouter} from 'vue-router'
 import {useKakao} from '@/composables/useKakao'
 import {useAuthStore} from '@/stores/auth'
 
+console.log('debug2')
 const router = useRouter()
 const {isKakaoInitialized, initKakao} = useKakao()
 const authStore = useAuthStore()

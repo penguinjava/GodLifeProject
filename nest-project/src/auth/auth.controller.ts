@@ -14,41 +14,56 @@ export class AuthController {
     @HttpCode(302)
     @Get('kakao')
     async kakaoCallback(@Query('code') code: string, @Res({ passthrough: true}) res: Response){
-        const { accessToken, refreshToken } = await this.authService.kakaoLogin(code)
-        
-        res.cookie('refreshToken', refreshToken, {
-           httpOnly: true,
-           secure: true,
-           sameSite: 'lax',
-           maxAge: 1000 * 60 * 60 * 24 * 30,
-        })
-        
-        return {
-            url: `http://localhost:5173/godlife/#/oauth?token=${accessToken}`
+        try{
+            const { accessToken, refreshToken } = await this.authService.kakaoLogin(code)
+
+            res.cookie('refreshToken', refreshToken, {
+                httpOnly: true,
+                secure: false,
+                sameSite: 'lax',
+                maxAge: 1000 * 60 * 60 * 24 * 30,
+            })
+
+            return {
+                url: `http://localhost:5173/godlife/#/oauth?token=${accessToken}`
+            }
+
+        }catch(error){
+            console.error('에러발생 : ', error);
         }
+
     }
 
 
     @HttpCode(204)
     @UseGuards(AuthGuard('jwt'))
     @Get('me')
-    async getProfile(@Req() req: { user: string}): Promise<ApiResponse<string>>{
+    async getProfile(){}
+
+
+    @HttpCode(200)
+    @Post('refresh')
+    async refreshToken(@Req() req: any, @Res({ passthrough: true }) res: Response){
         try{
+            const refreshToken = req.cookies['refreshToken'];
+            const accessToken = await this.authService.getRefreshToken(refreshToken);
             return {
                 success: true,
-                statusCode: 204,
-                message: 'Authentication successful',
-            };
-        }catch(err){
+                statusCode: 200,
+                message: 'Refresh token issued successfully',
+                data: accessToken
+            }
+        }catch(error){
+            console.error('ErrorMessage : ', error.message);
             return{
                 success: false,
                 statusCode: 500,
-                message: 'Authentication failed',
-                error: err?.message || 'Authentication failed',
+                message: 'Failed to issue refresh token',
+                error: error?.message || 'Logout failed',
             }
         }
-    }
 
+    }
 
     @HttpCode(200)
     @UseGuards(AuthGuard('jwt'))

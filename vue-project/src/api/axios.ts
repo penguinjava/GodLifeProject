@@ -2,8 +2,9 @@ import axios from 'axios'
 
 // 기본 axios 인스턴스 생성
 const axiosInstance = axios.create({
-    baseURL: '/api',
+    baseURL: 'http://localhost:3443/api',
     timeout: 5000,
+    withCredentials: true,
     headers: {
         'Content-Type': 'application/json'
     }
@@ -13,7 +14,8 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('accessToken')
-        if (token) {
+        const isRefreshRequest = config.url?.includes('/auth/refresh');
+        if (token && !isRefreshRequest) {
             config.headers.Authorization = `Bearer ${token}`
         }
         return config
@@ -25,9 +27,16 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
     (response) => response,
     (error) => {
-        console.error('Axios 응답 에러:', error.response)
-        return Promise.reject(error)
+        const { config, response } = error;
+
+        console.error('❌ Axios 에러 요약 ↓\n');
+        console.error('➡️ 요청 URL:', config?.url);
+        console.error('📡 HTTP 메서드:', config?.method?.toUpperCase());
+        console.error('📛 상태 코드:', response?.status);
+        console.error('📝 메시지:', response?.statusText || error.message);
+
+        return Promise.reject(error);
     }
-)
+);
 
 export default axiosInstance
